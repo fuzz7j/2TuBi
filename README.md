@@ -4,7 +4,7 @@ t00ls自动签到+查询域名，每天可获得2TuBi，使用Server酱推送。
 
 无第三方库，编译更方便。
 
-使用<http://www.beianw.com/>获取每天最新备案域名，如未获得TuBi每2小时进行一次域名查询，每天最多尝试查询100个com域名。
+使用<http://www.beianw.com/>获取每天最新备案域名。
 
 go version 1.16
 
