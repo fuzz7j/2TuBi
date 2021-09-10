@@ -36,7 +36,7 @@ var num int = 0
 func main() {
 	getCookie, _ := cookiejar.New(nil)
 	client := &http.Client{Jar: getCookie}
-	resp, _ := client.PostForm("https://www.t00ls.net/login.json", url.Values{"action": {action}, "username": {username}, "password": {password}, "questionid": {questionid}, "answer": {answer}})
+	resp, _ := client.PostForm("https://www.t00ls.cc/login.json", url.Values{"action": {action}, "username": {username}, "password": {password}, "questionid": {questionid}, "answer": {answer}})
 	json.NewDecoder(resp.Body).Decode(&r)
 	if r.Status != "success" {
 		fmt.Println("登陆失败，一小时后重试。")
@@ -52,7 +52,7 @@ func main() {
 
 // t00ls签到
 func ajaxsign(r Response, client *http.Client) {
-	resp, _ := client.PostForm("https://www.t00ls.net/ajax-sign.json", url.Values{"signsubmit": {r.Signsubmit}, "formhash": {r.Formhash}})
+	resp, _ := client.PostForm("https://www.t00ls.cc/ajax-sign.json", url.Values{"signsubmit": {r.Signsubmit}, "formhash": {r.Formhash}})
 	defer resp.Body.Close()
 	var sign Response
 	json.NewDecoder(resp.Body).Decode(&sign)
@@ -107,8 +107,8 @@ func getdomain() []string {
 // 查询域名并查询tubi获取日志，如果包含域名则查询成功。
 func domainsearch(r Response, client *http.Client, res []string) {
 	for i := 2; i < len(res); i++ {
-		client.PostForm("https://www.t00ls.net/domain.html", url.Values{"domain": {res[i]}, "formhash": {r.Formhash}, "querydomainsubmit": {"%E6%9F%A5%E8%AF%A2"}})
-		tubilog, err := client.Get("https://www.t00ls.net/members-tubilog.json")
+		client.PostForm("https://www.t00ls.cc/domain.html", url.Values{"domain": {res[i]}, "formhash": {r.Formhash}, "querydomainsubmit": {"%E6%9F%A5%E8%AF%A2"}})
+		tubilog, err := client.Get("https://www.t00ls.cc/members-tubilog.json")
 		if err != nil {
 			//
 		}
