@@ -85,7 +85,7 @@ func getdomain() []string {
 		}
 		defer resp.Body.Close()
 		body, err := io.ReadAll(resp.Body)
-		varhrefRegexp := regexp.MustCompile("\\w{0,62}\\.com")
+		varhrefRegexp := regexp.MustCompile("(\\w+-\\w+).com|(\\w+_\\w+).com|\\w+.com")
 		match := varhrefRegexp.FindAllString(string(body), -1)
 		temp = append(temp, match...)
 	}
