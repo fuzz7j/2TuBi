@@ -3,12 +3,9 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"io"
 	"net/http"
 	"net/http/cookiejar"
 	"net/url"
-	"regexp"
-	"strings"
 	"time"
 )
 
@@ -46,8 +43,6 @@ func main() {
 	defer resp.Body.Close()
 	r.Signsubmit = "true"
 	ajaxsign(r, client)
-	domainsearch(r, client, getdomain())
-
 }
 
 // t00ls签到
@@ -72,52 +67,4 @@ func ajaxsign(r Response, client *http.Client) {
 func push(msg string) {
 	url := "https://sctapi.ftqq.com/" + sendkey + ".send?title=t00ls&desp=" + url.QueryEscape(msg)
 	http.Get(url)
-}
-
-// 获取最新备案域名，去重。
-func getdomain() []string {
-	temp := make([]string, 0)
-	res := []string{}
-	for i := 1; i <= 10; i++ {
-		resp, err := http.Get(fmt.Sprintf("http://www.beianw.com/home/index/%d", i))
-		if err != nil {
-			//
-		}
-		defer resp.Body.Close()
-		body, err := io.ReadAll(resp.Body)
-		varhrefRegexp := regexp.MustCompile("[0-9a-zA-Z\\-\\_]+.(com|cn)")
-		match := varhrefRegexp.FindAllString(string(body), -1)
-		temp = append(temp, match...)
-	}
-	for i := range temp {
-		flag := true
-		for j := range res {
-			if temp[i] == res[j] {
-				flag = false
-				break
-			}
-		}
-		if flag {
-			res = append(res, temp[i])
-		}
-	}
-	return res
-}
-
-// 查询域名并查询tubi获取日志，如果包含域名则查询成功。
-func domainsearch(r Response, client *http.Client, res []string) {
-	for i := 2; i < len(res); i++ {
-		client.PostForm("https://www.t00ls.cc/domain.html", url.Values{"domain": {res[i]}, "formhash": {r.Formhash}, "querydomainsubmit": {"%E6%9F%A5%E8%AF%A2"}})
-		tubilog, err := client.Get("https://www.t00ls.cc/members-tubilog.json")
-		if err != nil {
-			//
-		}
-		defer tubilog.Body.Close()
-		body, err := io.ReadAll(tubilog.Body)
-		if strings.Contains(string(body), res[i]) == true {
-			fmt.Printf("%s 域名查询成功，Tubi Get！", res[i])
-			push(time.Unix(time.Now().Unix(), 0).UTC().Add(8*time.Hour).Format("2006-01-02 15:04:05") + res[i] + "域名查询成功")
-			break
-		}
-	}
 }
